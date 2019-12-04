@@ -21,3 +21,4 @@ Route::get('/contactlist', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/createContacts', 'HomeController@createContacts')->name('createContacts');
