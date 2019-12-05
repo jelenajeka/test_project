@@ -30,11 +30,9 @@ class HomeController extends Controller
     }
     public function contactlist()
     {
-      // $contacts = Contacts::all();
       $contacts = Contacts::with('phones')->get();
 
       return view('contactlist', ['contacts' => $contacts]);
-
     }
 
     public function createContacts(Request $request)

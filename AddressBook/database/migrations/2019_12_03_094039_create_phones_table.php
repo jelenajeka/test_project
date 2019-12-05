@@ -17,7 +17,7 @@ class CreatePhonesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('contact_id');
             $table->string('type');
-            $table->integer('number');
+            $table->string('number');
             $table->timestamps();
         });
     }

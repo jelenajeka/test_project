@@ -10,92 +10,49 @@
                 </div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                  <button class="btn btn-secondary float-right" data-bind='click: addContact'>Add new contact</button>
 
-                  <form data-bind="submit: addContact">
-                    <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>First name:</th>
-                        <th>Last name</th>
-                        <!-- <th>Type phone number:</th> -->
-                        <th>Phone numbers:</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><input class="form-control" data-bind="value: firstname" required /></td>
-                        <td><input class="form-control" data-bind="value: lastname" required /></td>
-                        <!-- <td><select class="form-control" data-bind="options: $root.availableTypes, value: type, optionsText: 'type'"></select></td> -->
-                        <td>
-                          <table>
+                      <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>First name:</th>
+                          <th>Last name</th>
+                          <th>Phone numbers:</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody data-bind="foreach: contacts">
+                        <tr>
+                          <td><input class="form-control" data-bind='value: firstname'  /></td>
+                          <td><input class="form-control" data-bind='value: lastname'  /></td>
+                          <td>
+                            <table>
                               <thead>
                                 <tr>
                                   <th>Type Phone Number:</th>
                                   <th>Number:</th>
                                 </tr>
                               </thead>
-                               <tbody data-bind="foreach: phones">
-                                   <tr>
-                                       <td><input class="form-control" data-bind='value: type' /></td>
-                                       <td><input class="form-control" data-bind='value: number'/></td>
-                                       <td><a class="btn btn-link" href='#' data-bind='click: $root.deleteNumber'>Delete number</a></td>
-                                   </tr>
-                               </tbody>
-                           </table>
-                           <button type="button" class="btn btn-link" data-bind='click: addNubmer, enable: phones().length < 10'>Add number</button>
-                       </td>
-                        <td><button  class="btn btn-secondary" type="submit">Add contact</button><td>
-                      </tr>
-                    </tbody>
-                  </form>
-
-                  <!-- <ul data-bind="foreach: contacts, visible: contacts().length > 0">
-                      <li>
-                          <input data-bind="value: firstname" />
-                          <input data-bind="value: lastname" />
-                      </li>
-                  </ul> -->
+                                 <tbody data-bind="foreach: numbers">
+                                     <tr>
+                                         <td><input class="form-control" data-bind='value: type' placeholder="Type phone number" /></td>
+                                         <td><input type="text" oninput="this.value=this.value.replace(/[^0-9, - , . , + , / , _]/g,'');" class="form-control" data-bind='value: number'/></td>
+                                         <td><button class="btn btn-link" href='#' data-bind='click: $root.deleteNumber'>Delete number</button></td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                             <button href="#" type="button" class="btn btn-link" data-bind='click: $root.addNubmer'>Add number</button>
+                         </td>
+                         <td><a href='#' data-bind='click: $root.deleteContact'>Delete contact</a><td>
+                        </tr>
+                      </tbody>
+                    </table>
 
 
-
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>First name:</th>
-                        <th>Last name</th>
-                        <th>Numbers:</th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody data-bind="foreach: contacts, visible: contacts().length > 0">
-                      <tr>
-                        <td><input class="form-control" data-bind="value: firstname" disabled/></td>
-                        <td><input class="form-control" data-bind="value: lastname" disabled/></td>
-                        <td>
-                           <ul  data-bind="foreach: numbers">
-                            <li style="list-style-type:none;"><label data-bind="text: type"/>:</li>
-                            <!-- <li style="list-style-type:none;"><label data-bind="text: number"/></li> -->
-                          </ul>
-                      </td>
-                        <td>
-                          <ul  data-bind="foreach: numbers">
-                            <li style="list-style-type:none;"><label data-bind="text: number"/></li>
-                          </ul>
-                        </td>
-                        <td><button class="btn btn-link" data-bind="click: $parent.deleteContact">delete contact</button></td>
-                      </tr>
-                    </tbody>
-                </table>
-
-
-                <button  class="btn btn-secondary btn-lg btn-block" data-bind="click: saveContacts, enable: $root.contacts().length > 0">Save contacts</button>
+                <div class="card-footer">
+                    <button  class="btn btn-secondary btn-lg btn-block" data-bind="click: saveContacts, enable: $root.contacts().length > 0">Save contacts</button>
+                </div>
                 </div>
             </div>
 
@@ -106,53 +63,26 @@
 <script>
 window.onload = function(){
 
-  function Contact(data) {
-    this.firstname = ko.observable(data.firstname);
-    this.lastname = ko.observable(data.lastname);
-    this.numbers = ko.observableArray(data.numbers);
-  }
-
-  function Number(data) {
-    this.type = ko.observable(data.type);
-    this.number = ko.observable(data.number);
-  }
-
-
-  function ContactsViewModel() {
-    var self = this;
-    self.contacts = ko.observableArray([]);
-    self.phones = ko.observableArray([]);
-    self.firstname = ko.observable();
-    self.lastname = ko.observable();
-    self.type = ko.observable();
-    self.number = ko.observable();
-
+  function ContactsViewModel(contacts) {
+      var self = this;
+      self.contacts = ko.observableArray(ko.utils.arrayMap(contacts, function(contact) {
+        return { firstname: contact.firstname, lastname: contact.lastname, numbers: ko.observableArray(contact.numbers) };
+    }));
 
     self.addContact = function() {
-
-      self.phones.push(new Number( { type: this.type(), number: this.number(),}));
-      console.log(self.phones);
-      console.log(JSON.stringify(ko.toJS(self.phones())));
-      // self.phones("","");
-      self.contacts.push(new Contact( { firstname: this.firstname(), lastname: this.lastname(),
-        numbers: this.phones()}));
-        console.log(self.contacts);
-        console.log(JSON.stringify(ko.toJS(self.contacts())));
-
-      self.firstname("");
-      self.lastname("");
-      self.phones([]);
-    };
-    self.deleteContact = function(contact) { self.contacts.remove(contact) };
-
-    self.addNubmer = function(contact){
-      // contact.phones.push({type: ko.observable(""), number: ko.observable("")});
-      contact.phones.push(new Number("",""));
-      console.log('add row number');
+        self.contacts.push({ firstname: "", lastname: "", numbers: ko.observableArray() });
     };
 
+    self.deleteContact = function(contact) {
+        self.contacts.remove(contact);
+    };
+    self.addNubmer = function(contact) {
+        contact.numbers.push({ type: "", number: "" });
+    };
 
-    self.deleteNumber = function(phone) { self.phones.remove(phone) };
+    self.deleteNumber = function(phone) {
+        $.each(self.contacts(), function() { this.numbers.remove(phone) })
+    };
 
     self.saveContacts = function(){
       $.ajaxSetup({
@@ -166,10 +96,13 @@ window.onload = function(){
            contentType: "application/json",
            success: function(result) {
              console.log(result);
-            }
+              location.reload();
+           },
+           error: function(result) {
+               console.log(result);
+          }
        });
-    };
-
+     };
   }
 
   ko.applyBindings(new ContactsViewModel());

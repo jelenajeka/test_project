@@ -22,5 +22,5 @@ Route::get('/contactlist','HomeController@contactlist');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::post('/createContacts', 'HomeController@createContacts')->name('createContacts');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+Route::post('/createContacts', 'HomeController@createContacts')->name('createContacts')->middleware('auth');
