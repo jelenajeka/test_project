@@ -24,27 +24,21 @@
                       </thead>
                       <tbody data-bind="foreach: contacts">
                         <tr>
-                          <td><input class="form-control" data-bind='value: firstname'  /></td>
+                          <td><input class="form-control" data-bind='value: firstname' /></td>
                           <td><input class="form-control" data-bind='value: lastname'  /></td>
                           <td>
                             <table>
-                              <thead>
-                                <tr>
-                                  <th>Type Phone Number:</th>
-                                  <th>Number:</th>
-                                </tr>
-                              </thead>
-                                 <tbody data-bind="foreach: numbers">
-                                     <tr>
-                                         <td><input class="form-control" data-bind='value: type' placeholder="Type phone number" /></td>
-                                         <td><input type="text" oninput="this.value=this.value.replace(/[^0-9, - , . , + , / , _]/g,'');" class="form-control" data-bind='value: number'/></td>
-                                         <td><button class="btn btn-link" href='#' data-bind='click: $root.deleteNumber'>Delete number</button></td>
-                                     </tr>
-                                 </tbody>
+                              <button  type="button" class="btn btn-secondary" data-bind='click: $root.addNubmer'>Add number</button>
+                               <tbody data-bind="foreach: numbers">
+                                   <tr>
+                                       <td><input class="form-control" data-bind='value: type' placeholder="Type phone number" /></td>
+                                       <td><input type="text" oninput="this.value=this.value.replace(/[^0-9, - , . , + , / , _, (, )]/g,'');" class="form-control" data-bind='value: number'/></td>
+                                       <td><button class="btn btn-outline-danger" href='#' data-bind='click: $root.deleteNumber'>Delete number</button></td>
+                                   </tr>
+                               </tbody>
                              </table>
-                             <button href="#" type="button" class="btn btn-link" data-bind='click: $root.addNubmer'>Add number</button>
                          </td>
-                         <td><a href='#' data-bind='click: $root.deleteContact'>Delete contact</a><td>
+                         <td><button class="btn btn-outline-danger" data-bind='click: $root.deleteContact'>Delete contact</button><td>
                         </tr>
                       </tbody>
                     </table>
