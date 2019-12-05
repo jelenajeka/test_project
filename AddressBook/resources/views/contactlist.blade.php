@@ -21,7 +21,24 @@
                          <th>Numbers:</th>
                        </tr>
                      <tbody>
-
+                         @foreach($contacts as $contact)
+                         <tr>
+                           <td>{{$contact->firstname}}</td>
+                           <td>{{$contact->lastname}}</td>
+                           <td>
+                             <table>
+                               <tbody>
+                                 @foreach($contact['phones'] as $num)
+                                 <tr>
+                                   <td>{{$num->type}}</td>
+                                   <td>{{$num->number}}</td>
+                                 </tr>
+                                 @endforeach
+                               </tbody>
+                             </table>
+                           </td>
+                         </tr>
+                         @endforeach
 
                      </tbody>
                 </div>

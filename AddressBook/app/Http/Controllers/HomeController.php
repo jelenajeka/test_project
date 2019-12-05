@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Contacts;
+use App\Phones;
 
 class HomeController extends Controller
 {
@@ -15,7 +16,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
@@ -27,19 +28,42 @@ class HomeController extends Controller
     {
         return view('home');
     }
+    public function contactlist()
+    {
+      // $contacts = Contacts::all();
+      $contacts = Contacts::with('phones')->get();
+
+      return view('contactlist', ['contacts' => $contacts]);
+
+    }
 
     public function createContacts(Request $request)
     {
-      $contacts =  $request->all();
-      $contact_data = array();
-      // dd($contacts);
-      foreach ($contacts['contacts'] as $contact) {
-        $contact_data = [
-           'firstname' => $contact['firstname'],
-           'lastname'=> $contact['lastname'],
-        ];
-        $c = Contacts::create($contact_data);
+      if($request->ajax()){
+        $contacts =  $request->all();
+        $contact_data = array();
+        // dd($contacts);
+        foreach ($contacts['contacts'] as $contact) {
+          $contact_data = [
+             'firstname' => $contact['firstname'],
+             'lastname'=> $contact['lastname'],
+          ];
+
+          if($c = Contacts::create($contact_data))
+          {
+            foreach ($contact['numbers'] as $num) {
+                $phone= Phones::create([
+                  'contact_id' => $c->id,
+                  'type' => $num['type'],
+                  'number' => $num['number'],
+                ]);
+              }
+        }
+        // return 'create contact';
       }
       return 'create contacts';
+      // return view('contactlist');
     }
+    return 'not create';
+  }
 }

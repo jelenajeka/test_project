@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Contacts;
 
 class Phones extends Model
 {
@@ -10,4 +11,6 @@ class Phones extends Model
 
   protected $fillable = ['contact_id', 'type', 'number' ];
   public $timestamps = false;
+
+
 }

@@ -14,9 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/contactlist', function () {
-    return view('contactlist');
-});
+// Route::get('/contactlist', function () {
+//     return view('contactlist');
+// });
+
+Route::get('/contactlist','HomeController@contactlist');
 
 Auth::routes();
 
