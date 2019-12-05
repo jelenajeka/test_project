@@ -52,17 +52,18 @@ class HomeController extends Controller
           if($c = Contacts::create($contact_data))
           {
             foreach ($contact['numbers'] as $num) {
+              if(!empty($num['type']) && !empty($num['number']))
+              {
                 $phone= Phones::create([
                   'contact_id' => $c->id,
                   'type' => $num['type'],
                   'number' => $num['number'],
                 ]);
+                }
               }
         }
-        // return 'create contact';
       }
       return 'create contacts';
-      // return view('contactlist');
     }
     return 'not create';
   }

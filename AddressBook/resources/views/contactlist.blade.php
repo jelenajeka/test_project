@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
               <div class="card-header">
                 <h4 class="float-left">Contacts</h4>
@@ -17,7 +17,7 @@
                      <thead>
                        <tr>
                          <th>First Name:</th>
-                         <th>Last Name</th>
+                         <th>Last Name:</th>
                          <th>Numbers:</th>
                        </tr>
                      <tbody>
@@ -30,7 +30,7 @@
                                <tbody>
                                  @foreach($contact['phones'] as $num)
                                  <tr>
-                                   <td>{{$num->type}}</td>
+                                   <td>{{$num->type}}:</td>
                                    <td>{{$num->number}}</td>
                                  </tr>
                                  @endforeach
